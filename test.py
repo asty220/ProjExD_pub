@@ -61,7 +61,13 @@ def main():
     target = pg.sprite.Group()                #的の描写
     for _ in range(2):
         target.add(Bomb(piclist[random.randint(0,len(piclist)-1)], 1, screen))
-    
+
+    cursors=pg.sprite.Group()                       #照準の描写
+    cursors.add(cursor("sozai/nc151920.png",0.1))
+
+    target=pg.sprite.Group()                #的の描写
+    for _ in range(2):
+        target.add(Bomb(piclist[random.randint(0,len(piclist)-1)],1,screen))
 
     while True:
         screen.disp.blit(screen.image, (0,0))
