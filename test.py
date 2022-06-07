@@ -52,11 +52,11 @@ def main():
     Bomb.containers=pg.sprite.Group()
     clock=pg.time.Clock()
 
-    screen=Screen("rensyu06/sozai/pg_bg.jpg",(1600,900),"エイム練習")             #スクリーンの生成
+    screen=Screen("sozai/pg_bg.jpg",(1600,900),"エイム練習")             #スクリーンの生成
     screen.disp.blit(screen.image, (0,0))
 
     cursors=pg.sprite.Group()                       #照準の描写
-    cursors.add(cursor("rensyu06/sozai/nc151920.png",0.1,pg.mouse.get_pos))
+    cursors.add(cursor("sozai/nc151920.png",0.1,pg.mouse.get_pos))
 
     target=pg.sprite.Group()                #的の描写
     for _ in range(100):
@@ -80,7 +80,7 @@ def main():
 
 
         if event.type==pg.MOUSEBUTTONDOWN:          #マウスをクリックした際に読み込まれる
-            Music("rensyu06/sozai/nc72338.wav")         #音を再生する
+            Music("sozai/nc72338.wav")         #音を再生する
             if len(pg.sprite.groupcollide(cursors,target,0,1))!=0:             #的に重なっているときに読み込まれる
                     sc+=1                                                       #カーソルと重なっていた的を削除し新しい的を生成する
                     target.add(Bomb(piclist[random.randint(0,len(piclist)-1)],1,screen))
@@ -146,7 +146,7 @@ def start():            #スタート画面の表示
         key_list=pg.key.get_pressed()
         timecount+=1
         if timecount==144:
-            Music("rensyu06/sozai/nc133938.wav")    #スタート時の音声
+            Music("sozai/nc133938.wav")    #スタート時の音声
         if key_list[pg.K_s]:
             main()              #main関数を実行
         pg.display.update()
@@ -155,10 +155,10 @@ def start():            #スタート画面の表示
 if __name__ == "__main__":
     sc=0
     time=0
-    musiclist=["rensyu06/sozai/nc211934.wav","rensyu06/sozai/nc133067.wav","rensyu06/sozai/nc127260.mp3","rensyu06/sozai/nc67013.wav","rensyu06/sozai/nc197899.wav"]
-    piclist=["rensyu06/sozai/0.png","rensyu06/sozai/1.png","rensyu06/sozai/2.png","rensyu06/sozai/3.png","rensyu06/sozai/4.png","rensyu06/sozai/5.png","rensyu06/sozai/6.png","rensyu06/sozai/7.png","rensyu06/sozai/8.png","rensyu06/sozai/9.png","rensyu06/sozai/ぱっちぃ.png"]
+    musiclist=["sozai/nc211934.wav","sozai/nc133067.wav","sozai/nc127260.mp3","sozai/nc67013.wav","sozai/nc197899.wav"]
+    piclist=["sozai/0.png","sozai/1.png","sozai/2.png","sozai/3.png","sozai/4.png","sozai/5.png","sozai/6.png","sozai/7.png","sozai/8.png","sozai/9.png","sozai/ぱっちぃ.png"]
     pg.init() 
-    s=pg.mixer.Sound("rensyu06/sozai/フリージア.mp3")
+    s=pg.mixer.Sound("sozai/フリージア.mp3")
     s.set_volume(0.5)
     s.play(loops=-1)
     start()
