@@ -47,12 +47,12 @@ class Music:
 def main():
     global sc,time,musiclist,piclist
 
-    timeset=4320
+    timeset=144*77
     cursor.containers=pg.sprite.RenderUpdates()
     Bomb.containers=pg.sprite.Group()
     clock=pg.time.Clock()
 
-    screen=Screen("sozai/pg_bg.jpg",(1600,900),"エイム練習")             #スクリーンの生成
+    screen=Screen("sozai/aozora.jpg",(1600,900),"エイム練習")   #背景を変更(C0B21158)          #スクリーンの生成
     screen.disp.blit(screen.image, (0,0))
 
     cursors=pg.sprite.Group()                       #照準の描写
@@ -145,8 +145,8 @@ def start():            #スタート画面の表示
         bs.blit(score4,(400,400))
         key_list=pg.key.get_pressed()
         timecount+=1
-        if timecount==144:
-            Music("sozai/nc133938.wav")    #スタート時の音声
+        #if timecount==144:  #音声なし(C0B21158)
+            #Music("sozai/nc133938.wav")    #スタート時の音声
         if key_list[pg.K_s]:
             main()              #main関数を実行
         pg.display.update()
