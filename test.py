@@ -28,15 +28,23 @@ class cursor(pg.sprite.Sprite):
 
 
 class Bomb(pg.sprite.Sprite):
-    def __init__(self, fn, r, screen):
+    def __init__(self, fn, r, vxy, screen):
         super().__init__()
-        pg.sprite.Sprite.__init__(self,self.containers)
-        self.image = pg.image.load(fn)   #sarface
+        pg.sprite.Sprite.__init__(self, self.containers)
+        self.image = pg.image.load(fn)                      # sarface
         self.image = pg.transform.rotozoom(self.image, 0, r)
-        self.rect = self.image.get_rect()   #rect
+        self.rect = self.image.get_rect()                   # rect
         self.rect.center = pg.mouse.get_pos()
-        self.rect.centerx = random.randint(20, screen.rect.width-20)
-        self.rect.centery = random.randint(20, screen.rect.height-20)
+        self.rect.centerx = random.randint(20, screen.rect.width - 20)
+        self.rect.centery = random.randint(20, screen.rect.height - 20)
+        self.vx, self.vy = vxy
+
+    # C0B21048 
+    def update(self, screen):
+        self.rect.move_ip(self.vx, self.vy)
+        x, y = check_bound(screen.rect, self.rect)
+        self.vx *= x                                        # 横方向に画面外なら，横方向速度の符号反転
+        self.vy *= y                                        # 縦方向に画面外なら，縦方向速度の符号反転
 
 class Music:
     def __init__(self,fn):
@@ -45,8 +53,10 @@ class Music:
         pg.mixer.music.play()
 
 def main():
-    global sc,time,musiclist,piclist
-
+    global time,musiclist,piclist
+    
+    sc=0
+    r=3
     timeset=4320
     cursor.containers=pg.sprite.RenderUpdates()
     Bomb.containers=pg.sprite.Group()
@@ -60,7 +70,8 @@ def main():
 
     target=pg.sprite.Group()                #的の描写
     for _ in range(2):
-        target.add(Bomb(piclist[random.randint(0,len(piclist)-1)],1,screen))
+        target.add(Bomb(piclist[random.randint(0, len(piclist)-1)], 1,
+                        (random.randint(-r, r), random.randint(-r, r)), screen))
     
 
     while True:
@@ -83,9 +94,11 @@ def main():
             Music("sozai/nc72338.wav")         #音を再生する
             if len(pg.sprite.groupcollide(cursors,target,0,1))!=0:             #的に重なっているときに読み込まれる
                     sc+=1                                                       #カーソルと重なっていた的を削除し新しい的を生成する
-                    target.add(Bomb(piclist[random.randint(0,len(piclist)-1)],1,screen))
+                    target.add(Bomb(piclist[random.randint(0, len(piclist)-1)], 1,
+                        (random.randint(-r, r), random.randint(-r, r)), screen))
                     if len(target)<=1:                                          #万が一的が同時に消えてしまった場合に動き的を補充する
-                        target.add(Bomb(piclist[random.randint(0,len(piclist)-1)],1,screen))
+                        target.add(Bomb(piclist[random.randint(0, len(piclist)-1)], 1,
+                        (random.randint(-r, r), random.randint(-r, r)), screen))
         
         font=pg.font.Font(None,30)
         score=font.render(f"score:{str(sc)}",True,"BLACK")
@@ -97,10 +110,10 @@ def main():
         time+=1
 
         if time>=timeset:
-            scores()
+            scores(sc)
 
 def scores():      #ゲームオーバー画面を表示するための関数
-    global time,sc,musiclist
+    global time,musiclist
     txtlist=[f"GAME OVER",f"Your Score:{sc}!",f"Exit:Press 'ESCAPE' key",f"Restart:Press 'R' Key"]
     while True:
         pg.display.set_caption("game over")         
@@ -151,9 +164,16 @@ def start():            #スタート画面の表示
             main()              #main関数を実行
         pg.display.update()
 
+def check_bound(sc_r, obj_r): 
+    # 画面用Rect, ｛Point，的｝Rect
+    # 画面内：+1 / 画面外：-1
+    x, y = +1, +1
+    if obj_r.left < sc_r.left or sc_r.right  < obj_r.right : x = -1
+    if obj_r.top  < sc_r.top  or sc_r.bottom < obj_r.bottom: y = -1
+    return x, y                                             # 衝突判定
+
 
 if __name__ == "__main__":
-    sc=0
     time=0
     musiclist=["sozai/nc211934.wav","sozai/nc133067.wav","sozai/nc127260.mp3","sozai/nc67013.wav","sozai/nc197899.wav"]
     piclist=["sozai/0.png","sozai/1.png","sozai/2.png","sozai/3.png","sozai/4.png","sozai/5.png","sozai/6.png","sozai/7.png","sozai/8.png","sozai/9.png","sozai/ぱっちぃ.png"]
