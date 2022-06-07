@@ -46,7 +46,6 @@ class Bomb(pg.sprite.Sprite):
 
 class Music:
     def __init__(self, fn):
-        super().__init__()
         pg.mixer.music.load(fn)
         pg.mixer.music.play()
 
@@ -55,7 +54,7 @@ def main():
     global sc, time, musiclist, piclist
 
     timeset = 4320
-    s = 3                                                   # 的の速さ
+    sp = 3                                                   # 的の速さ
     cursor.containers = pg.sprite.RenderUpdates()
     Bomb.containers = pg.sprite.Group()
     clock = pg.time.Clock()
@@ -70,7 +69,7 @@ def main():
     
     for _ in range(2):
         target.add(Bomb(piclist[random.randint(0, len(piclist)-1)], 1,
-                        (random.randint(-s, s), random.randint(-s, s)), screen))
+                        (random.randint(-sp, sp), random.randint(-sp, sp)), screen))
 
     while True:
         screen.disp.blit(screen.image, (0, 0))
@@ -95,11 +94,11 @@ def main():
             if len(pg.sprite.groupcollide(cursors, target, 0, 1)) != 0: # 的に重なっているときに読み込まれる
                     sc += 1                                             # カーソルと重なっていた的を削除し新しい的を生成する
                     target.add(Bomb(piclist[random.randint(0, len(piclist)-1)], 1,
-                               (random.randint(-s, s), random.randint(-s, s)), screen))
+                               (random.randint(-sp, sp), random.randint(-sp, sp)), screen))
                     
                     if len(target) <= 1:                                # 万が一的が同時に消えてしまった場合に動き的を補充する
                         target.add(Bomb(piclist[random.randint(0, len(piclist)-1)], 1,
-                                   (random.randint(-s, s), random.randint(-s, s)), screen))
+                                   (random.randint(-sp, sp), random.randint(-sp, sp)), screen))
         
         font = pg.font.Font(None, 30)
         score = font.render(f"score:{str(sc)}", True, "BLACK")
